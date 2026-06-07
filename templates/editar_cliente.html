@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+ 
+{% block title %}Editar Cliente{% endblock %}
+ 
+{% block content %}
+    <h1>Editar Cliente</h1>
+    <form id="form-editar-cliente" action="/clientes/editar/{{ cliente.id }}" method="POST">
+        <div>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" value="{{ cliente.nome }}" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ cliente.email }}" required>
+        </div>
+        <div>
+            <label for="numero_telefone">Número de telefone</label>
+            <input type="text" id="numero_telefone" name="numero_telefone" value="{{ cliente.numero_telefone }}" required>
+        </div>
+        <div>
+            <label for="empresa">Empresa</label>
+            <input type="text" id="empresa" name="empresa" value="{{ cliente.empresa }}" required>
+        </div>
+        <div>
+            <label for="data_nascimento">Data de nascimento</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" value="{{ cliente.data_nascimento.strftime('%Y-%m-%d') }}" required>
+        </div>
+        <button type="submit" class="btn">Salvar</button>
+    </form>
+{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+    <style>
+        .iti { width: 70%; display: block; }
+        .error-message { color: red; display: none; font-size: 16px; margin-top: 13px; }
+        .iti__selected-flag { transform: translateY(13px) !important; padding-left: 10px !important; }
+        .iti input[type="tel"] { padding-left: 95px !important; height: 50px; font-size: 16px; }
+    </style>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script>
+        const inputInput = document.querySelector("#numero_telefone");
+        const errorMsg = document.querySelector("#error-msg");
+        const form = document.querySelector("#form-editar-cliente");
+ 
+        const iti = window.intlTelInput(inputInput, {
+            initialCountry: "br",
+            separateDialCode: true,
+            autoPlaceholder: "off",
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
+ 
+        inputInput.addEventListener("keypress", function(e) {
+            if (e.which < 10 || e.which > 57) e.preventDefault();
+        });
+ 
+        inputInput.addEventListener("input", function(e) {
+            let apenasNumeros = e.target.value.replace(/\D/g, '');
+            if (iti.getSelectedCountryData().iso2 === "br") {
+                let x = apenasNumeros.match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+                e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            } else {
+                e.target.value = apenasNumeros;
+            }
+        });
+ 
+        form.addEventListener("submit", function(event) {
+            errorMsg.style.display = "none";
+            if (!iti.isValidNumber()) {
+                event.preventDefault();
+                errorMsg.style.display = "block";
+                inputInput.focus();
+            }
+        });
+    </script>
+{% endblock %}

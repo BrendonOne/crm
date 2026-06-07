@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}CRM{% endblock %}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar">
+            <a href="/">Início</a>
+            <a href="/clientes">Clientes</a>
+            <a href="/negocios">Negócios</a>
+            <a href="/tarefas">Tarefas</a>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+        {% block extra_scripts %}{% endblock %}
+    </body>
+</html>

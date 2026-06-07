@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+ 
+{% block title %}Clientes Cadastrados{% endblock %}
+ 
+{% block content %}
+    <h1>Clientes Cadastrados</h1>
+    <a href="/clientes/novo" class="btn">Adicionar Novo Cliente</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Número de telefone</th>
+                <th>Empresa</th>
+                <th>Data de nascimento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>{{ cliente.numero_telefone }}</td>
+                <td>{{ cliente.empresa }}</td>
+                <td>{{ cliente.data_nascimento.strftime('%d/%m/%Y') }}</td>
+                <td>
+                    <form action="/clientes/deletar/{{ cliente.id }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este cliente?');">
+                        <button type="submit" class="btn">Deletar</button>
+                    </form>
+                    <button onclick="window.location.href='/clientes/editar/{{ cliente.id }}'" class="btn">Editar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

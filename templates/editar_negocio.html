@@ -1,0 +1,34 @@
+{%- extends 'base.html' -%}
+
+{%- block title %}Editar Negócio{%- endblock %}
+
+{%- block content %}
+    <h1>Editar Negócio</h1>
+    <form id="form-editar-negocio" action="/negocios/editar/{{ negocio.id }}" method="POST">
+        <div>
+            <label for="titulo">Título do negócio</label>
+            <input id="titulo" name="titulo" value="{{ negocio.titulo }}" required>
+        </div>
+        <div>
+            <label for="valor">Valor</label>
+            <input id="valor" name="valor" type="number" step="0.01" value="{{ negocio.valor }}" required>
+        </div>
+        <div>
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="Em andamento" {% if negocio.status == "Em andamento" %}selected{% endif %}>Em andamento</option>
+                <option value="Concluido" {% if negocio.status == "Concluido" %}selected{% endif %}>Concluído</option>
+                <option value="Cancelado" {% if negocio.status == "Cancelado" %}selected{% endif %}>Cancelado</option>
+            </select>
+        </div>
+        <div>
+            <label for="cliente_id">Cliente</label>
+            <select id="cliente_id" name="cliente_id" required>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}" {% if negocio.cliente_id == cliente.id %}selected{% endif %}>{{ cliente.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn">Salvar</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+ 
+{% block title %}Negócios Cadastrados{% endblock %}
+ 
+{% block content %}
+    <h1>Negócios Cadastrados</h1>
+    <a href="/negocios/novo" class="btn">Novo Negócio</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Cliente</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for negocio in negocios %}
+            <tr>
+                <td>{{ negocio.titulo }}</td>
+                <td>{{ negocio.valor }}</td>
+                <td>{{ negocio.status }}</td>
+                <td>{{ negocio.cliente.nome }}</td>
+                <td>
+                    <form action="{{ url_for('negocios.deletar_negocio', negocio_id=negocio.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este negócio?');">
+                        <button type="submit" class="btn">Deletar</button>
+                    </form>
+                    <button onclick="window.location.href='/negocios/editar/{{ negocio.id }}'" type="button" class="btn">Editar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

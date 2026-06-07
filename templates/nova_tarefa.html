@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+ 
+{% block title %}Nova Tarefa{% endblock %}
+ 
+{% block content %}
+    <h1>Nova Tarefa</h1>
+    <form id="form-tarefa" action="/tarefas/nova" method="POST">
+        <div>
+            <label for="titulo">Título da tarefa</label>
+            <input id="titulo" name="titulo" required>
+        </div>
+        <div>
+            <label for="descricao">Descrição da tarefa</label>
+            <input id="descricao" name="descricao" required>
+        </div>
+        <div>
+            <label for="data_vencimento">Data de vencimento</label>
+            <input type="date" id="data_vencimento" name="data_vencimento" required>
+            {% block extra_scripts %}
+            <script>
+               document.querySelector("#form-tarefa").addEventListener("submit", function(e) {
+                  const data = document.querySelector("#data_vencimento").value;
+                  const ano = data.split("-")[0];
+                  if (ano.length > 4 || parseInt(ano) < 1900 || parseInt(ano) > 2100) {
+                        e.preventDefault();
+                        alert("Data inválida!");
+                  }
+               });
+            </script>
+            {% endblock %}
+        </div>
+        <div>
+            <label for="concluida">Concluída</label>
+            <input type="checkbox" id="concluida" name="concluida">
+        </div>
+        <div>
+            <label for="cliente_id">Cliente</label>
+            <select id="cliente_id" name="cliente_id" required>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn">Salvar</button>
+    </form>
+{% endblock %}
